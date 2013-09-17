@@ -3,6 +3,10 @@ Model = function(obj) {
 };
 
 Controller = function(obj) {
+  if(typeof obj.initialize === 'function') {
+    obj.initialize();
+  }
+
   $.extend(this, obj);
 };
 

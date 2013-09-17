@@ -1,6 +1,19 @@
 var ApplicationController = new Controller({
   layout: function() {
     return '/views/layouts/main'
+  },
+
+  initialize: function() {
+    this.renderHeader();
+    this.renderFooter();
+  },
+
+  renderHeader: function() {
+
+  },
+
+  renderFooter: function() {
+
   }
 });
 
