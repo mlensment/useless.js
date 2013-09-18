@@ -4,16 +4,18 @@ var ApplicationController = new Controller({
   },
 
   initialize: function() {
-    this.renderHeader();
-    this.renderFooter();
+    this.renderLayout(function() {
+      this.renderHeader();
+      this.renderFooter();
+    }.bind(this));
   },
 
-  renderHeader: function() {
-
+  renderHeader: function header() {
+    this.renderView({ viewDir: 'views/layouts/', container: '#header' });
   },
 
-  renderFooter: function() {
-
+  renderFooter: function footer() {
+    this.renderView({ viewDir: 'views/layouts/', container: '#footer' });
   }
 });
 
@@ -22,12 +24,14 @@ var UsersController = ApplicationController.extend({
   container: '#content',
 
   index: function index() {
-    this.render();
+    this.renderView();
   },
 
   show: function show(id) {
-    this.render();
-  }
+    this.renderView();
+  },
+
+
 });
 
 $(document).ready(function() {

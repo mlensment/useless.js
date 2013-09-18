@@ -3,29 +3,48 @@ Model = function(obj) {
 };
 
 Controller = function(obj) {
-  if(typeof obj.initialize === 'function') {
-    obj.initialize();
-  }
-
   $.extend(this, obj);
+
+  if(typeof this.initialize === 'function') {
+    this.initialize();
+  }
 };
 
 Controller.stat = function() {
   console.log('static');
 };
 
-Controller.prototype.render = function(view) {
-  view = view || arguments.callee.caller.name;
-  this.loadLayout(function() { this.loadView(view) }.bind(this));
+Controller.prototype.render = function(obj) {
+  obj = obj || {};
+  var view = obj.view || arguments.callee.caller.name;
+
+  this.renderLayout(function() {
+    this.renderView({ view: view })
+  }.bind(this));
 };
 
-Controller.prototype.loadView = function(view) {
-  var selector = getAttr(this.container, 'body')
-  var viewDir = getAttr(this.viewDir);
+Controller.prototype.renderView = function(obj) {
+  obj = obj || {};
+
+  var viewDir = obj.viewDir;
+  if(!viewDir) {
+    viewDir = getAttr(this.viewDir);
+  }
+
+  var selector = obj.container;
+  if(!selector) {
+    selector = getAttr(this.container, 'body')
+  }
+
+  var view = obj.view;
+  if(!view) {
+    view = arguments.callee.caller.name;
+  }
+
   $(selector).load(viewDir + view + '.html');
 };
 
-Controller.prototype.loadLayout = function(callback) {
+Controller.prototype.renderLayout = function(callback) {
   $('body').load(this.layout() + '.html', function() {
     callback();
   });
