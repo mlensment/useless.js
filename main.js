@@ -9,6 +9,7 @@ var ApplicationController = new Controller({
     this.renderLayout(function() {
       this.renderHeader();
       this.renderFooter();
+      Routes.hashchange();
     }.bind(this));
   },
 
@@ -31,6 +32,10 @@ var UsersController = ApplicationController.extend({
 
   show: function show(id) {
     this.renderView();
+  },
+
+  bla: function() {
+    console.log('bla');
   }
 });
 
@@ -46,6 +51,11 @@ var CustomersController = ApplicationController.extend({
   show: function show(id) {
     this.renderView();
   }
+});
+
+var Routes = new Routes({
+  '/customers': function() { CustomersController.index(); },
+  '/users': function() { UsersController.index(); }
 });
 
 $(document).ready(function() {

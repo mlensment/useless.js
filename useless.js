@@ -2,6 +2,8 @@ Model = function(obj) {
 
 };
 
+// CONTROLLER
+
 Controller = function(obj) {
   $.extend(this, obj);
 
@@ -57,6 +59,21 @@ Controller.prototype.extend = function(obj) {
   return retController;
 };
 
+// ROUTES
+
+Routes = function(obj) {
+  this.obj = obj;
+  $(window).on('hashchange', function() {
+    this.hashchange();
+  }.bind(this));
+};
+Routes.prototype.hashchange = function() {
+  for(var x in this.obj) {
+    if(window.location.hash == '#' + x || window.location.hash == '#!' + x) {
+      this.obj[x]();
+    }
+  }
+};
 
 // HELPERS
 function getAttr(attr, def) {
