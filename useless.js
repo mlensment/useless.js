@@ -51,8 +51,10 @@ Controller.prototype.renderLayout = function(callback) {
 };
 
 Controller.prototype.extend = function(obj) {
-  $.extend(this, obj);
-  return this;
+  var retController = new Controller();
+  $.extend(retController, this);
+  $.extend(retController, obj);
+  return retController;
 };
 
 

@@ -3,6 +3,8 @@ var ApplicationController = new Controller({
     return '/views/layouts/main'
   },
 
+  viewDir: 'views/layouts/',
+
   initialize: function() {
     this.renderLayout(function() {
       this.renderHeader();
@@ -11,11 +13,11 @@ var ApplicationController = new Controller({
   },
 
   renderHeader: function header() {
-    this.renderView({ viewDir: 'views/layouts/', container: '#header' });
+    this.renderView({ container: '#header' });
   },
 
   renderFooter: function footer() {
-    this.renderView({ viewDir: 'views/layouts/', container: '#footer' });
+    this.renderView({ container: '#footer' });
   }
 });
 
@@ -29,9 +31,21 @@ var UsersController = ApplicationController.extend({
 
   show: function show(id) {
     this.renderView();
+  }
+});
+
+
+var CustomersController = ApplicationController.extend({
+  viewDir: '/views/customers/',
+  container: '#content',
+
+  index: function index() {
+    this.renderView();
   },
 
-
+  show: function show(id) {
+    this.renderView();
+  }
 });
 
 $(document).ready(function() {
