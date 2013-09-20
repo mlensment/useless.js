@@ -1,7 +1,3 @@
-Model = function(obj) {
-
-};
-
 // CONTROLLER
 
 Controller = function(obj) {
@@ -59,6 +55,31 @@ Controller.prototype.extend = function(obj) {
   return retController;
 };
 
+$(document).on("submit", "form", function(e) {
+  e.preventDefault();
+  action = e.target.action.split('#')[1];
+  var params = {
+    form: $(e.target),
+    action: e.target.action
+  };
+  Routes.obj[action](params);
+});
+
+
+// MODEL
+
+Model = function(obj) {};
+
+Model.get = function(url, data, callback {
+  $.ajax({
+    type: 'get',
+    url: url,
+    data: data
+  }).done(function(data) {
+    if(callback) { callback(data); }
+  });
+};
+
 // ROUTES
 
 Routes = function(obj) {
@@ -67,6 +88,7 @@ Routes = function(obj) {
     this.hashchange();
   }.bind(this));
 };
+
 Routes.prototype.hashchange = function() {
   for(var x in this.obj) {
     if(window.location.hash == '#' + x || window.location.hash == '#!' + x) {

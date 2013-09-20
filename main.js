@@ -1,3 +1,7 @@
+var Application = {
+  apiUrl: 'http://localhost:3000'
+};
+
 var ApplicationController = new Controller({
   layout: function() {
     return '/views/layouts/main'
@@ -26,16 +30,24 @@ var UsersController = ApplicationController.extend({
   viewDir: '/views/users/',
   container: '#content',
 
+  blank: function blank() {
+    this.renderView();
+  },
+
+  create: function create(params) {
+    Model.post(params.action, params.form.serialize(), function(data) {
+      this.renderView({view: 'show', data: data});
+    }.bind(this));
+  },
+
   index: function index() {
     this.renderView();
   },
 
   show: function show(id) {
-    this.renderView();
-  },
-
-  bla: function() {
-    console.log('bla');
+    Model.get('/users/' + id, function(data) {
+      this.renderView(data);
+    }.bind(this));
   }
 });
 
@@ -55,7 +67,9 @@ var CustomersController = ApplicationController.extend({
 
 var Routes = new Routes({
   '/customers': function() { CustomersController.index(); },
-  '/users': function() { UsersController.index(); }
+  '/users': function() { UsersController.index(); },
+  '/users/blank': function() { UsersController.blank(); },
+  '/users/create': function(params) { UsersController.create(params); }
 });
 
 $(document).ready(function() {
