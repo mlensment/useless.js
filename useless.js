@@ -39,11 +39,20 @@ Controller.prototype.renderView = function(obj) {
     view = arguments.callee.caller.name;
   }
 
-  $(selector).load(viewDir + view + '.html');
+  $.ajax({
+    url: viewDir + view + '.html',
+    dataType: 'html'
+  }).done(function(data) {
+    $(selector).html(Mustache.render(data, obj.data));
+  });
 };
 
 Controller.prototype.renderLayout = function(callback) {
-  $('body').load(this.layout() + '.html', function() {
+  $.ajax({
+    url: this.layout() + '.html',
+    dataType: 'html'
+  }).done(function(data) {
+    $('body').html(Mustache.render(data));
     callback();
   });
 };
@@ -70,16 +79,22 @@ $(document).on("submit", "form", function(e) {
 
 Model = function(obj) {};
 
-Model.get = function(url, data, callback {
+Model.get = function(action, data, callback) {
+  if(typeof data === 'function') {
+    callback = data;
+  }
+
   $.ajax({
     type: 'get',
-    url: url,
-    data: data
+    url: Application.apiUrl + action,
+    data: data,
+    dataType: "json"
   }).done(function(data) {
     if(callback) { callback(data); }
   });
 };
 
+Model.post = function(action, data, callback) {};
 // ROUTES
 
 Routes = function(obj) {

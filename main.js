@@ -1,5 +1,5 @@
 var Application = {
-  apiUrl: 'http://localhost:3000'
+  apiUrl: 'http://localhost:3001'
 };
 
 var ApplicationController = new Controller({
@@ -41,7 +41,9 @@ var UsersController = ApplicationController.extend({
   },
 
   index: function index() {
-    this.renderView();
+    Model.get('/users', function(data) {
+      this.renderView({view: 'index', data: data});
+    }.bind(this));
   },
 
   show: function show(id) {
@@ -70,8 +72,4 @@ var Routes = new Routes({
   '/users': function() { UsersController.index(); },
   '/users/blank': function() { UsersController.blank(); },
   '/users/create': function(params) { UsersController.create(params); }
-});
-
-$(document).ready(function() {
-
 });
