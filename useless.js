@@ -57,6 +57,10 @@ Controller.prototype.renderLayout = function(callback) {
   });
 };
 
+Controller.prototype.redirect = function(path) {
+  window.location.hash = '#' + path;
+};
+
 Controller.prototype.extend = function(obj) {
   var retController = new Controller();
   $.extend(retController, this);
@@ -66,12 +70,13 @@ Controller.prototype.extend = function(obj) {
 
 $(document).on("submit", "form", function(e) {
   e.preventDefault();
-  action = e.target.action.split('#')[1];
+  var action = e.target.action.split('#')[1];
+  var route = $(e.target).attr('method') + '#' + action
   var params = {
     form: $(e.target),
-    action: e.target.action
+    action: action
   };
-  Routes.obj[action](params);
+  Routes.obj[route](params);
 });
 
 
@@ -94,7 +99,20 @@ Model.get = function(action, data, callback) {
   });
 };
 
-Model.post = function(action, data, callback) {};
+Model.post = function(action, data, callback) {
+  if(typeof data === 'function') {
+    callback = data;
+  }
+
+  $.ajax({
+    type: 'post',
+    url: Application.apiUrl + action,
+    data: data,
+    dataType: "json"
+  }).done(function(data) {
+    if(callback) { callback(data); }
+  });
+};
 // ROUTES
 
 Routes = function(obj) {
@@ -106,7 +124,7 @@ Routes = function(obj) {
 
 Routes.prototype.hashchange = function() {
   for(var x in this.obj) {
-    if(window.location.hash == '#' + x || window.location.hash == '#!' + x) {
+    if('get' + window.location.hash == x || 'get' + window.location.hash == x) {
       this.obj[x]();
     }
   }

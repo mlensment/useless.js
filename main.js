@@ -36,7 +36,7 @@ var UsersController = ApplicationController.extend({
 
   create: function create(params) {
     Model.post(params.action, params.form.serialize(), function(data) {
-      this.renderView({view: 'show', data: data});
+      this.redirect('/users/show/' + data.id);
     }.bind(this));
   },
 
@@ -68,8 +68,9 @@ var CustomersController = ApplicationController.extend({
 });
 
 var Routes = new Routes({
-  '/customers': function() { CustomersController.index(); },
-  '/users': function() { UsersController.index(); },
-  '/users/blank': function() { UsersController.blank(); },
-  '/users/create': function(params) { UsersController.create(params); }
+  'get#/customers': function() { CustomersController.index(); },
+  'get#/users': function() { UsersController.index(); },
+  'get#/users/blank': function() { UsersController.blank(); },
+  'get#/users/:id': function(params) { UsersController.show(params); },
+  'post#/users': function(params) { UsersController.create(params); }
 });
