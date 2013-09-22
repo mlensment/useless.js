@@ -123,9 +123,24 @@ Routes = function(obj) {
 };
 
 Routes.prototype.hashchange = function() {
-  for(var x in this.obj) {
-    if('get' + window.location.hash == x || 'get' + window.location.hash == x) {
-      this.obj[x]();
+  var urlHash = window.location.hash;
+  var hashSlices = urlHash.split('/');
+
+  for(var path in this.obj) {
+    var pathSlices = path.split('/');
+
+    //Match obvious paths like /users/blank
+    if('get' + urlHash == path) {
+      this.obj[path]();
+      return;
+    }
+
+    //Match paths with params
+    if(('get' + hashSlices[0] == pathSlices[0]) && hashSlices.length == pathSlices.length) {
+      var params = mapParams(hashSlices, pathSlices);
+      if(isEmptyObject(params)) { continue; }
+      this.obj[path](params);
+      return;
     }
   }
 };
@@ -137,4 +152,25 @@ function getAttr(attr, def) {
   }
 
   return attr || def;
+}
+
+function mapParams(hashSlices, pathSlices) {
+  var params = {};
+
+  for(var i in pathSlices) {
+    if(pathSlices[i][0] == ':') {
+      params[pathSlices[i].substr(1)] = hashSlices[i];
+    }
+  }
+
+  return params;
+}
+
+function isEmptyObject(obj) {
+  for(var prop in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+      return false;
+    }
+  }
+  return true;
 }

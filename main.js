@@ -36,7 +36,7 @@ var UsersController = ApplicationController.extend({
 
   create: function create(params) {
     Model.post(params.action, params.form.serialize(), function(data) {
-      this.redirect('/users/show/' + data.id);
+      this.redirect('/users/' + data.id);
     }.bind(this));
   },
 
@@ -46,9 +46,9 @@ var UsersController = ApplicationController.extend({
     }.bind(this));
   },
 
-  show: function show(id) {
-    Model.get('/users/' + id, function(data) {
-      this.renderView(data);
+  show: function show(params) {
+    Model.get('/users/' + params.id, function(data) {
+      this.renderView({view: 'show', data: data});
     }.bind(this));
   }
 });
