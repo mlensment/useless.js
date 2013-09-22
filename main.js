@@ -52,6 +52,18 @@ var UsersController = ApplicationController.extend({
     }.bind(this));
   },
 
+  edit: function edit(params) {
+    Model.get('/users/' + params.id, function(data) {
+      this.render({view: 'edit', data: data});
+    }.bind(this));
+  },
+
+  update: function(params) {
+    Model.put('/users/' + params.id, params.form.serialize(), function() {
+      this.redirect('/users/' + params.id);
+    }.bind(this));
+  },
+
   destroy: function(params) {
     Model.delete('/users/' + params.id, function() {
       this.redirect('/users');
@@ -79,5 +91,7 @@ var Routes = new Routes({
   'get#/users/blank': function() { UsersController.blank(); },
   'get#/users/:id': function(params) { UsersController.show(params); },
   'post#/users': function(params) { UsersController.create(params); },
-  'delete#/users/:id': function(params) { UsersController.destroy(params); }
+  'delete#/users/:id': function(params) { UsersController.destroy(params); },
+  'get#/users/:id/edit': function(params) { UsersController.edit(params); },
+  'put#/users/:id': function(params) { UsersController.update(params); }
 });

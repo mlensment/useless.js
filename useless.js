@@ -80,6 +80,10 @@ Model.delete = function(action, data, callback) {
   Model.query('delete', action, data, callback);
 }
 
+Model.put = function(action, data, callback) {
+  Model.query('put', action, data, callback);
+}
+
 Model.query = function(type, action, data, callback) {
   if(typeof data === 'function') {
     callback = data;
