@@ -12,17 +12,12 @@ Controller.stat = function() {
   console.log('static');
 };
 
-Controller.prototype.render = function(obj) {
+Controller.prototype.render = function(obj, callback) {
   obj = obj || {};
-  var view = obj.view || arguments.callee.caller.name;
 
-  this.renderLayout(function() {
-    this.renderView({ view: view })
-  }.bind(this));
-};
-
-Controller.prototype.renderView = function(obj) {
-  obj = obj || {};
+  if(typeof obj === 'function') {
+    callback = obj;
+  }
 
   var viewDir = obj.viewDir;
   if(!viewDir) {
@@ -44,16 +39,7 @@ Controller.prototype.renderView = function(obj) {
     dataType: 'html'
   }).done(function(data) {
     $(selector).html(Mustache.render(data, obj.data));
-  });
-};
-
-Controller.prototype.renderLayout = function(callback) {
-  $.ajax({
-    url: this.layout() + '.html',
-    dataType: 'html'
-  }).done(function(data) {
-    $('body').html(Mustache.render(data));
-    callback();
+    if(typeof callback === 'function') { callback(); }
   });
 };
 

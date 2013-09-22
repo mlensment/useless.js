@@ -4,13 +4,13 @@ var Application = {
 
 var ApplicationController = new Controller({
   layout: function() {
-    return '/views/layouts/main'
+    return 'main'
   },
 
   viewDir: 'views/layouts/',
 
   initialize: function() {
-    this.renderLayout(function() {
+    this.render({ view: this.layout() }, function() {
       this.renderHeader();
       this.renderFooter();
       Routes.hashchange();
@@ -18,11 +18,11 @@ var ApplicationController = new Controller({
   },
 
   renderHeader: function header() {
-    this.renderView({ container: '#header' });
+    this.render({ container: '#header' });
   },
 
   renderFooter: function footer() {
-    this.renderView({ container: '#footer' });
+    this.render({ container: '#footer' });
   }
 });
 
@@ -31,7 +31,7 @@ var UsersController = ApplicationController.extend({
   container: '#content',
 
   blank: function blank() {
-    this.renderView();
+    this.render();
   },
 
   create: function create(params) {
@@ -42,13 +42,13 @@ var UsersController = ApplicationController.extend({
 
   index: function index() {
     Model.get('/users', function(data) {
-      this.renderView({view: 'index', data: data});
+      this.render({view: 'index', data: data});
     }.bind(this));
   },
 
   show: function show(params) {
     Model.get('/users/' + params.id, function(data) {
-      this.renderView({view: 'show', data: data});
+      this.render({view: 'show', data: data});
     }.bind(this));
   }
 });
@@ -59,11 +59,11 @@ var CustomersController = ApplicationController.extend({
   container: '#content',
 
   index: function index() {
-    this.renderView();
+    this.render();
   },
 
   show: function show(id) {
-    this.renderView();
+    this.render();
   }
 });
 
