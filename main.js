@@ -13,7 +13,7 @@ var ApplicationController = new Controller({
     this.render({ view: this.layout() }, function() {
       this.renderHeader();
       this.renderFooter();
-      Routes.hashchange();
+      Routes.initialize();
     }.bind(this));
   },
 
@@ -50,6 +50,12 @@ var UsersController = ApplicationController.extend({
     Model.get('/users/' + params.id, function(data) {
       this.render({view: 'show', data: data});
     }.bind(this));
+  },
+
+  destroy: function(params) {
+    Model.delete('/users/' + params.id, function() {
+      this.redirect('/users');
+    }.bind(this));
   }
 });
 
@@ -72,5 +78,6 @@ var Routes = new Routes({
   'get#/users': function() { UsersController.index(); },
   'get#/users/blank': function() { UsersController.blank(); },
   'get#/users/:id': function(params) { UsersController.show(params); },
-  'post#/users': function(params) { UsersController.create(params); }
+  'post#/users': function(params) { UsersController.create(params); },
+  'delete#/users/:id': function(params) { UsersController.destroy(params); }
 });

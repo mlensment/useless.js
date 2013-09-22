@@ -57,41 +57,43 @@ Controller.prototype.extend = function(obj) {
 $(document).on("submit", "form", function(e) {
   e.preventDefault();
   var action = e.target.action.split('#')[1];
-  var route = $(e.target).attr('method') + '#' + action
   var params = {
     form: $(e.target),
     action: action
   };
-  Routes.obj[route](params);
+
+  Routes.matchRoute('#' + action, $(e.target).attr('method'), params);
 });
 
-
 // MODEL
-
 Model = function(obj) {};
 
 Model.get = function(action, data, callback) {
-  if(typeof data === 'function') {
-    callback = data;
-  }
-
-  $.ajax({
-    type: 'get',
-    url: Application.apiUrl + action,
-    data: data,
-    dataType: "json"
-  }).done(function(data) {
-    if(callback) { callback(data); }
-  });
+  Model.query('get', action, data, callback);
 };
 
 Model.post = function(action, data, callback) {
+  Model.query('post', action, data, callback);
+};
+
+Model.delete = function(action, data, callback) {
+  Model.query('delete', action, data, callback);
+}
+
+Model.query = function(type, action, data, callback) {
   if(typeof data === 'function') {
     callback = data;
   }
 
+  console.log({
+    type: type,
+    url: Application.apiUrl + action,
+    data: data,
+    dataType: "json"
+  });
+
   $.ajax({
-    type: 'post',
+    type: type,
     url: Application.apiUrl + action,
     data: data,
     dataType: "json"
@@ -104,28 +106,32 @@ Model.post = function(action, data, callback) {
 Routes = function(obj) {
   this.obj = obj;
   $(window).on('hashchange', function() {
-    this.hashchange();
+    this.matchRoute(window.location.hash, 'get');
   }.bind(this));
 };
 
-Routes.prototype.hashchange = function() {
-  var urlHash = window.location.hash;
-  var hashSlices = urlHash.split('/');
+Routes.prototype.initialize = function() {
+  this.matchRoute(window.location.hash, 'get');
+};
 
-  for(var path in this.obj) {
-    var pathSlices = path.split('/');
+Routes.prototype.matchRoute = function(path, type, params) {
+  var pathSlices = path.split('/');
+
+  for(var route in this.obj) {
+    var routeSlices = route.split('/');
 
     //Match obvious paths like /users/blank
-    if('get' + urlHash == path) {
-      this.obj[path]();
+    if(type + path == route) {
+      this.obj[route](params);
       return;
     }
 
     //Match paths with params
-    if(('get' + hashSlices[0] == pathSlices[0]) && hashSlices.length == pathSlices.length) {
-      var params = mapParams(hashSlices, pathSlices);
-      if(isEmptyObject(params)) { continue; }
-      this.obj[path](params);
+    if((type + pathSlices[0] == routeSlices[0]) && pathSlices.length == routeSlices.length) {
+      var urlParams = mapParams(pathSlices, routeSlices);
+      if(isEmptyObject(urlParams)) { continue; }
+      $.extend(urlParams, params);
+      this.obj[route](urlParams);
       return;
     }
   }
@@ -140,12 +146,12 @@ function getAttr(attr, def) {
   return attr || def;
 }
 
-function mapParams(hashSlices, pathSlices) {
+function mapParams(pathSlices, routeSlices) {
   var params = {};
 
-  for(var i in pathSlices) {
-    if(pathSlices[i][0] == ':') {
-      params[pathSlices[i].substr(1)] = hashSlices[i];
+  for(var i in routeSlices) {
+    if(routeSlices[i][0] == ':') {
+      params[routeSlices[i].substr(1)] = pathSlices[i];
     }
   }
 
