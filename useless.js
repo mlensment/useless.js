@@ -30,9 +30,7 @@ Controller.prototype.render = function(obj, callback) {
   }
 
   var view = obj.view;
-  if(!view) {
-    view = arguments.callee.caller.name;
-  }
+  if(!view) { throw 'View must be defined!'}
 
   $.ajax({
     url: viewDir + view + '.html',
@@ -89,13 +87,6 @@ Model.query = function(type, action, data, callback) {
     callback = data;
   }
 
-  console.log({
-    type: type,
-    url: Application.apiUrl + action,
-    data: data,
-    dataType: "json"
-  });
-
   $.ajax({
     type: type,
     url: Application.apiUrl + action,
@@ -121,16 +112,19 @@ Routes.prototype.initialize = function() {
 Routes.prototype.matchRoute = function(path, type, params) {
   var pathSlices = path.split('/');
 
-  for(var route in this.obj) {
+  //Match obvious paths like /users/blank
+  for(var route in this.obj) {
     var routeSlices = route.split('/');
-
-    //Match obvious paths like /users/blank
     if(type + path == route) {
       this.obj[route](params);
       return;
     }
+  }
 
-    //Match paths with params
+  //Match paths with params
+  for(var route in this.obj) {
+    var routeSlices = route.split('/');
+
     if((type + pathSlices[0] == routeSlices[0]) && pathSlices.length == routeSlices.length) {
       var urlParams = mapParams(pathSlices, routeSlices);
       if(isEmptyObject(urlParams)) { continue; }

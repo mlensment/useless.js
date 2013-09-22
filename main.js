@@ -17,12 +17,12 @@ var ApplicationController = new Controller({
     }.bind(this));
   },
 
-  renderHeader: function header() {
-    this.render({ container: '#header' });
+  renderHeader: function() {
+    this.render({ view: 'header', container: '#header' });
   },
 
-  renderFooter: function footer() {
-    this.render({ container: '#footer' });
+  renderFooter: function() {
+    this.render({ view: 'footer', container: '#footer' });
   }
 });
 
@@ -30,29 +30,29 @@ var UsersController = ApplicationController.extend({
   viewDir: '/views/users/',
   container: '#content',
 
-  blank: function blank() {
-    this.render();
+  blank: function() {
+    this.render({ view: 'blank' });
   },
 
-  create: function create(params) {
+  create: function(params) {
     Model.post(params.action, params.form.serialize(), function(data) {
       this.redirect('/users/' + data.id);
     }.bind(this));
   },
 
-  index: function index() {
+  index: function() {
     Model.get('/users', function(data) {
       this.render({view: 'index', data: data});
     }.bind(this));
   },
 
-  show: function show(params) {
+  show: function(params) {
     Model.get('/users/' + params.id, function(data) {
       this.render({view: 'show', data: data});
     }.bind(this));
   },
 
-  edit: function edit(params) {
+  edit: function(params) {
     Model.get('/users/' + params.id, function(data) {
       this.render({view: 'edit', data: data});
     }.bind(this));
@@ -76,12 +76,12 @@ var CustomersController = ApplicationController.extend({
   viewDir: '/views/customers/',
   container: '#content',
 
-  index: function index() {
-    this.render();
+  index: function() {
+    this.render({ view: 'index' });
   },
 
-  show: function show(id) {
-    this.render();
+  show: function(id) {
+    this.render({ view: 'show' });
   }
 });
 
