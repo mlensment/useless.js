@@ -1,5 +1,6 @@
 var Application = {
-  apiUrl: 'http://localhost:3001'
+  apiUrl: 'http://localhost:3001',
+  locales: ['et', 'en']
 };
 
 var ApplicationController = new Controller({
@@ -86,6 +87,7 @@ var CustomersController = ApplicationController.extend({
 });
 
 var Routes = new Routes({
+  'get': function() { UsersController.index(); },
   'get#/customers': function() { CustomersController.index(); },
   'get#/users': function() { UsersController.index(); },
   'get#/users/blank': function() { UsersController.blank(); },
