@@ -53,14 +53,19 @@
       url: viewDir + view + '.html',
       dataType: 'html'
     }).done(function(data) {
-      obj.data = obj.data || {};
-      //If obj.data hasn't attribute t then add it for translations
-      if(!obj.data.t && !isEmptyObject(Application.t)) {
-        obj.data.t = Application.t;
-      }
 
-      $(selector).html(Mustache.render(data, obj.data));
-      if(typeof callback === 'function') { callback(); }
+      //Load locale before render
+      Routes.loadLocale(function() {
+        obj.data = obj.data || {};
+        //If obj.data hasn't attribute t then add it for translations
+        if(!obj.data.t && !isEmptyObject(Application.t)) {
+          obj.data.t = Application.t;
+        }
+
+        $(selector).html(Mustache.render(data, obj.data));
+        if(typeof callback === 'function') { callback(); }
+      });
+
     });
   };
 
@@ -114,16 +119,16 @@
     this.obj = obj;
     $(window).on('hashchange', function() {
       //Update locale and continue route matching when done
-      this.updateLocale(function() {
+
         this.matchRoute(window.location.hash, 'get');
-      }.bind(this));
+
     }.bind(this));
   };
 
   Routes.prototype.initialize = function() {
-    this.updateLocale(function() {
+
       this.matchRoute(window.location.hash, 'get');
-    }.bind(this));
+
   };
 
   Routes.prototype.matchRoute = function(path, type, params) {
@@ -161,8 +166,8 @@
     }
   };
 
-  Routes.prototype.updateLocale = function(callback) {
-    console.log('Updating locale');
+  Routes.prototype.loadLocale = function(callback) {
+    console.log('Loading locale');
     //Callback at once when there are no locales in application
     if(typeof Application.locales === 'undefined' || Application.locales.length == 0) {
       callback();
@@ -186,11 +191,11 @@
     //Locale did change, set new current locale
     Application.locale = localeInUrl || Application.locale;
 
-    //Update all the links on page
-    console.log('update all')
-    $('a').each(function(_, v) {
-      updateLocaleOnLink(v);
-    });
+    //Update all the links on page if Application.t is present
+    if(!isEmptyObject(Application.t)) {
+      location.reload();
+      return;
+    }
 
     //Load translations from file
     $.ajax({
@@ -203,17 +208,6 @@
   };
 
   // HELPERS
-  function loadLocale(callback) {
-    if(!isEmptyObject(Application.t)) { callback(); return; }
-    $.ajax({
-      url: 'js/locales/' + Application.locale + '.json',
-      dataType: 'json'
-    }).done(function(data) {
-      Application.t = data;
-      callback();
-    });
-  }
-
   function updateLocaleOnLink(link) {
     var oldHref = $(link).attr('href');
     //If link does not start with #, skip

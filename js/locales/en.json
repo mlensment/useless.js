@@ -3,5 +3,7 @@
   "email":  "E-mail",
   "admin": "Administrator",
   "show": "Show",
-  "edit": "Edit"
+  "edit": "Edit",
+  "users": "Users",
+  "create_user": "Create user"
 }
