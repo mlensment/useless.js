@@ -1,4 +1,32 @@
 (function() {
+  t = function(key) {
+    //Return nothing if there are no locales in application
+    if(typeof Application.locales === 'undefined' || Application.locales.length == 0) {
+      return;
+    }
+
+    //Init translations object if there is none
+    Application.t = Application.t || {};
+
+    //Set translations to first in line when there is no default or no current
+    Application.locale = Application.locales[0] || Application.locale;
+
+    //Try to get key from current translation object
+    if(Application.t[Application.locale]) {
+      return Application.t[Application.locale][key];
+    }
+
+    //Load translations from file
+    $.ajax({
+      url: 'js/locales/' + Application.locale + '.json',
+      dataType: 'json'
+    }).done(function(data) {
+      console.log('bla')
+      Application.t[Application.locale] = data;
+      return data[key];
+    });
+  };
+
   //Catch form submits and redirect them to controller
   $(document).on("submit", "form", function(e) {
     e.preventDefault();
@@ -107,21 +135,26 @@
   Routes = function(obj) {
     this.obj = obj;
     $(window).on('hashchange', function() {
-      this.updateLocale();
-      this.matchRoute(window.location.hash, 'get');
+      //Update locale and continue route matching when done
+      this.updateLocale(function() {
+        this.matchRoute(window.location.hash, 'get');
+      }.bind(this));
     }.bind(this));
   };
 
   Routes.prototype.initialize = function() {
-    this.matchRoute(window.location.hash, 'get');
+    this.updateLocale(function() {
+      this.matchRoute(window.location.hash, 'get');
+    }.bind(this));
   };
 
   Routes.prototype.matchRoute = function(path, type, params) {
+    console.log(Application.t);
     var pathSlices = path.split('/');
 
     //Remove locale from path
     if(parseLocaleFromUrl() != null) {
-      pathSlices.splice(1,1);
+      pathSlices.splice(1, 1);
       path = pathSlices.join('/');
     }
 
@@ -150,23 +183,52 @@
     }
   };
 
-  Routes.prototype.updateLocale = function() {
+  Routes.prototype.updateLocale = function(callback) {
     console.log('Updating locale');
+    //Callback at once when there are no locales in application
+    if(typeof Application.locales === 'undefined' || Application.locales.length == 0) {
+      callback();
+      return;
+    }
+
+    //If there is no translation object, then create one
+    Application.t = Application.t || {};
+
+    //Set translations to first in line when there is no default or no current
+    Application.locale = Application.locale || Application.locales[0];
+
     var localeInUrl = parseLocaleFromUrl();
-    //Locale didn't change, nothing to do here
-    if(Application.locale == localeInUrl) {
+    //Locale didn't change (and is loaded), nothing to do here
+
+
+    if(Application.locale == localeInUrl && Application.t) {
+      callback();
       return;
     }
 
     //Locale did change, set new current locale
-    Application.locale = localeInUrl;
+    Application.locale = localeInUrl || Application.locale;
 
     //Update all the links on page
     console.log('update all')
     $('a').each(function(_, v) {
       updateLocaleOnLink(v);
     });
+
+    //Load translations from file
+    $.ajax({
+      url: 'js/locales/' + Application.locale + '.json',
+      dataType: 'json'
+    }).done(function(data) {
+      Application.t = data;
+      callback();
+    });
   };
+
+  // HELPERS
+  function loadLocale() {
+
+  }
 
   function updateLocaleOnLink(link) {
     var oldHref = $(link).attr('href');
@@ -212,7 +274,6 @@
     return null;
   }
 
-  // HELPERS
   function getAttr(attr, def) {
     if(typeof attr === 'function') {
       return attr();
