@@ -1,9 +1,4 @@
 (function() {
-  //CONFIG AND LOCALES
-  var uselessConfig = {
-    locale: 'et'
-  };
-
   //Catch form submits and redirect them to controller
   $(document).on("submit", "form", function(e) {
     e.preventDefault();
@@ -18,7 +13,7 @@
 
   //Update language on links when new links appear in dom
   $('body').on('DOMNodeInserted', 'a', function(e) {
-    //addLocaleToHref(e.target);
+    updateLocaleOnLink(e.target);
   });
 
   // CONTROLLER
@@ -135,6 +130,7 @@
       var routeSlices = route.split('/');
       if(type + path == route) {
         this.obj[route](params);
+        Application.currentPath = path.substr(1);
         return;
       }
     }
@@ -148,6 +144,7 @@
         if(isEmptyObject(urlParams)) { continue; }
         $.extend(urlParams, params);
         this.obj[route](urlParams);
+        Application.currentPath = path.substr(1);
         return;
       }
     }
@@ -165,6 +162,7 @@
     Application.locale = localeInUrl;
 
     //Update all the links on page
+    console.log('update all')
     $('a').each(function(_, v) {
       updateLocaleOnLink(v);
     });
@@ -172,8 +170,10 @@
 
   function updateLocaleOnLink(link) {
     var oldHref = $(link).attr('href');
+    //If link does not start with #, skip
+    if(oldHref[0] != "#") { return true; }
+
     var localeInOldHref = getLocaleFromHref(oldHref);
-    console.log('locale in old href',  localeInOldHref);
     //If locale already matches with new locale, skip
     if(localeInOldHref == Application.locale) { return true; }
 
