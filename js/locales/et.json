@@ -1,3 +1,7 @@
 {
-  "hello": "tere"
+  "name": "Nimi",
+  "email":  "E-mail",
+  "admin": "Administraator",
+  "show": "Näita",
+  "edit": "Muuda"
 }

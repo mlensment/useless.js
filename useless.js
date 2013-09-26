@@ -1,32 +1,4 @@
 (function() {
-  t = function(key) {
-    //Return nothing if there are no locales in application
-    if(typeof Application.locales === 'undefined' || Application.locales.length == 0) {
-      return;
-    }
-
-    //Init translations object if there is none
-    Application.t = Application.t || {};
-
-    //Set translations to first in line when there is no default or no current
-    Application.locale = Application.locales[0] || Application.locale;
-
-    //Try to get key from current translation object
-    if(Application.t[Application.locale]) {
-      return Application.t[Application.locale][key];
-    }
-
-    //Load translations from file
-    $.ajax({
-      url: 'js/locales/' + Application.locale + '.json',
-      dataType: 'json'
-    }).done(function(data) {
-      console.log('bla')
-      Application.t[Application.locale] = data;
-      return data[key];
-    });
-  };
-
   //Catch form submits and redirect them to controller
   $(document).on("submit", "form", function(e) {
     e.preventDefault();
@@ -81,6 +53,12 @@
       url: viewDir + view + '.html',
       dataType: 'html'
     }).done(function(data) {
+      obj.data = obj.data || {};
+      //If obj.data hasn't attribute t then add it for translations
+      if(!obj.data.t && !isEmptyObject(Application.t)) {
+        obj.data.t = Application.t;
+      }
+
       $(selector).html(Mustache.render(data, obj.data));
       if(typeof callback === 'function') { callback(); }
     });
@@ -198,10 +176,9 @@
     Application.locale = Application.locale || Application.locales[0];
 
     var localeInUrl = parseLocaleFromUrl();
+
     //Locale didn't change (and is loaded), nothing to do here
-
-
-    if(Application.locale == localeInUrl && Application.t) {
+    if(Application.locale == localeInUrl && !isEmptyObject(Application.t)) {
       callback();
       return;
     }
@@ -226,8 +203,15 @@
   };
 
   // HELPERS
-  function loadLocale() {
-
+  function loadLocale(callback) {
+    if(!isEmptyObject(Application.t)) { callback(); return; }
+    $.ajax({
+      url: 'js/locales/' + Application.locale + '.json',
+      dataType: 'json'
+    }).done(function(data) {
+      Application.t = data;
+      callback();
+    });
   }
 
   function updateLocaleOnLink(link) {
@@ -295,6 +279,7 @@
   }
 
   function isEmptyObject(obj) {
+    if(typeof obj === 'undefined') { return true;}
     for(var prop in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, prop)) {
         return false;

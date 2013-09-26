@@ -1,3 +1,7 @@
 {
-  "hello": "hello"
+  "name": "Name",
+  "email":  "E-mail",
+  "admin": "Administrator",
+  "show": "Show",
+  "edit": "Edit"
 }

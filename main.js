@@ -1,5 +1,5 @@
 var Application = {
-  apiUrl: 'http://localhost:3001',
+  apiUrl: 'http://192.168.0.10:3001',
   locales: ['et', 'en']
 };
 
