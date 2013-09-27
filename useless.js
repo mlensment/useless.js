@@ -119,16 +119,17 @@
     this.obj = obj;
     $(window).on('hashchange', function() {
       //Update locale and continue route matching when done
-
+      this.loadLocale(function() {
         this.matchRoute(window.location.hash, 'get');
+      }.bind(this));
 
     }.bind(this));
   };
 
   Routes.prototype.initialize = function() {
-
+    this.loadLocale(function() {
       this.matchRoute(window.location.hash, 'get');
-
+    }.bind(this));
   };
 
   Routes.prototype.matchRoute = function(path, type, params) {
@@ -167,41 +168,24 @@
   };
 
   Routes.prototype.loadLocale = function(callback) {
-    console.log('Loading locale');
     //Callback at once when there are no locales in application
     if(typeof Application.locales === 'undefined' || Application.locales.length == 0) {
       callback();
       return;
     }
 
-    //If there is no translation object, then create one
-    Application.t = Application.t || {};
+    //Load locale from URL or default if that locale is not yet loaded
+    var localeToLoad = parseLocaleFromUrl() || Application.locales[0];
+    console.log(Application.locale == localeToLoad);
+    if(Application.locale == localeToLoad) { callback(); return;}
 
-    //Set translations to first in line when there is no default or no current
-    Application.locale = Application.locale || Application.locales[0];
+    if(Application.locale != null) { location.reload(); };
 
-    var localeInUrl = parseLocaleFromUrl();
-
-    //Locale didn't change (and is loaded), nothing to do here
-    if(Application.locale == localeInUrl && !isEmptyObject(Application.t)) {
-      callback();
-      return;
-    }
-
-    //Locale did change, set new current locale
-    Application.locale = localeInUrl || Application.locale;
-
-    //Update all the links on page if Application.t is present
-    if(!isEmptyObject(Application.t)) {
-      location.reload();
-      return;
-    }
-
-    //Load translations from file
     $.ajax({
-      url: 'js/locales/' + Application.locale + '.json',
+      url: 'js/locales/' + localeToLoad + '.json',
       dataType: 'json'
     }).done(function(data) {
+      Application.locale = localeToLoad;
       Application.t = data;
       callback();
     });
