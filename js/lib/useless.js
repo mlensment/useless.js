@@ -7,7 +7,6 @@
       form: $(e.target),
       action: action
     };
-
     Routes.matchRoute('#' + action, $(e.target).attr('method'), params);
   });
 
@@ -26,7 +25,6 @@
   };
 
   Controller.stat = function() {
-    console.log('static');
   };
 
   Controller.prototype.render = function(obj, callback) {
@@ -133,11 +131,10 @@
   };
 
   Routes.prototype.matchRoute = function(path, type, params) {
-    console.log(Application.t);
     var pathSlices = path.split('/');
 
     //Remove locale from path
-    if(parseLocaleFromUrl() != null) {
+    if(parseLocaleFromUrl() != null && type == 'get') {
       pathSlices.splice(1, 1);
       path = pathSlices.join('/');
     }
@@ -176,13 +173,12 @@
 
     //Load locale from URL or default if that locale is not yet loaded
     var localeToLoad = parseLocaleFromUrl() || Application.locales[0];
-    console.log(Application.locale == localeToLoad);
     if(Application.locale == localeToLoad) { callback(); return;}
 
     if(Application.locale != null) { location.reload(); };
 
     $.ajax({
-      url: 'js/locales/' + localeToLoad + '.json',
+      url: Application.localesLocation + localeToLoad + '.json',
       dataType: 'json'
     }).done(function(data) {
       Application.locale = localeToLoad;
