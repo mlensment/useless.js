@@ -32,7 +32,7 @@ We need to make an API for useless to use. Hopefully you have rails-api gem inst
 
 For enabling crossdomain requests, we need to install another gem into the system.
 
-**Gemfile**
+**/Gemfile**
 
 `gem 'rack-cors', :require => 'rack/cors'`
 
@@ -41,7 +41,7 @@ On the command line, run `bundle` while being in project directory.
 Next .. some extra configuration has to be done to actually enable the gem.
 We will add a few lines in between a specific block in application configuration.
 
-**config/application.rb**
+**/config/application.rb**
 
 ```ruby
 ### other code ###
