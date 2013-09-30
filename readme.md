@@ -76,11 +76,11 @@ Because useless is only an alpha, it hasn't got any generators so everything mus
 Open command line and navigate to directory where you want to create your useless app.
 We need to create a directory structure for our application:
 
-app
-  controllers
-  views
-    tasks
-js
+app  
+  controllers  
+  views  
+    tasks  
+js  
   lib
 
 To do this, I wrote a small script wich you need to copy and paste to your command line.
