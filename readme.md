@@ -77,11 +77,11 @@ Open command line and navigate to directory where you want to create your useles
 We need to create a directory structure for our application:
 
 app  
-  controllers  
-  views  
-    tasks  
+--controllers  
+--views  
+----tasks  
 js  
-  lib
+--lib
 
 To do this, I wrote a small script wich you need to copy and paste to your command line.
 
