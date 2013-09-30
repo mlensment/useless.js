@@ -5,7 +5,7 @@ First of all, this library is so useless that it's absolutely pointless and henc
 It is a javascript library (sort of like backbone or angular, but by far simpler).
 It gives Rails like structure for your project, but it's javascript.
 
-I know there are a lot of global objects, but you know what, [http://i.pikstra.com/pics/21766.gif](deal with it). It seems normal to me, that you can access controllers from routes and models from controllers without any restrictions.
+I know there are a lot of global objects, but you know what, [deal with it](http://i.pikstra.com/pics/21766.gif). It seems normal to me, that you can access controllers from routes and models from controllers without any restrictions.
 
 Note that this is an absolute alpha version of this library. Everything could change without any notice.
 
@@ -15,9 +15,9 @@ Tests? Are you kidding me? It's so useless it doesn't have any.
 
 In this tutorial I'm gonna create a simple tasklist. No additionals features, for the sake of simplicity.
 
-I am going to use [https://github.com/rails-api/rails-api](rails-api) gem for API so make sure you have ruby and [https://github.com/rails-api/rails-api](rails-api) gem installed before following this tutorial.
+I am going to use [rails-api](https://github.com/rails-api/rails-api) gem for API so make sure you have ruby and [rails-api](https://github.com/rails-api/rails-api) gem installed before following this tutorial.
 
-And for the client I'm going to use [http://nodejs.org/](node.js) and [http://expressjs.com/](express) to serve our files. So make sure you have those as well. Or you can just put useless to rails-api public folder. I just prefer if client and API are separate projects.
+And for the client I'm going to use [node.js](http://nodejs.org/) and [express](http://expressjs.com/) to serve our files. So make sure you have those as well. Or you can just put useless to rails-api public folder. I just prefer if client and API are separate projects.
 
 ## Creating an API for useless
 
@@ -27,7 +27,7 @@ You can choose whichever technology or framework you prefer. PHP (Yii), Ruby (Ra
 
 Open command line and navigate to directory where you want to create your API.
 
-We need to make an API for useless to use. Hopefully you have [https://github.com/rails-api/rails-api](rails-api) installed already.
+We need to make an API for useless to use. Hopefully you have [rails-api](https://github.com/rails-api/rails-api) installed already.
 
 `rails-api new server`
 
