@@ -1,0 +1,9 @@
+{
+  "name": "Name",
+  "email":  "E-mail",
+  "admin": "Administrator",
+  "show": "Show",
+  "edit": "Edit",
+  "users": "Users",
+  "create_user": "Create user"
+}
