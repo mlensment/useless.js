@@ -90,10 +90,12 @@ To do this, I wrote a small script wich you need to copy and paste to your comma
 We need to download four files. jquery.js, mustache.js, useless.js, and package.json.
 First two because useless has two hard dependencies. [JQuery](http://jquery.com/) and [Mustache](https://github.com/janl/mustache.js).
 
-`wget -O js/lib/useless.js https://github.com/mlensment/useless.js/blob/master/useless.js js/useless.js`
-`wget -O js/lib/mustache.js https://github.com/mlensment/useless.js/blob/master/test-application/client/js/lib/mustache.js`
-`wget -O js/lib/jquery.js http://code.jquery.com/jquery-1.10.2.js`
-`wget -O package.json https://github.com/mlensment/useless.js/blob/master/test-application/client/package.json`
+```
+wget -O js/lib/useless.js https://github.com/mlensment/useless.js/blob/master/useless.js js/useless.js
+wget -O js/lib/mustache.js https://github.com/mlensment/useless.js/blob/master/test-application/client/js/lib/mustache.js
+wget -O js/lib/jquery.js http://code.jquery.com/jquery-1.10.2.js
+wget -O package.json https://github.com/mlensment/useless.js/blob/master/test-application/client/package.json
+```
 
 Once you have these files, run `npm install` to install express (for static file serving).
 Note: You can choose witchever server you prefer to serve static files (Apache, nginix).
