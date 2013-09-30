@@ -1,5 +1,4 @@
 First of all, this library is so useless that it's absolutely pointless and hence, DON'T USE IT.
-
 # What's useless?
 
 It is a javascript library (sort of like backbone or angular, but by far simpler).
@@ -15,31 +14,34 @@ Tests? Are you kidding me? It's so useless it doesn't have any.
 
 In this tutorial I'm gonna create a simple tasklist. No additionals features, for the sake of simplicity.
 
-I am going to use [rails-api](https://github.com/rails-api/rails-api) gem for API so make sure you have ruby and [rails-api](https://github.com/rails-api/rails-api) gem installed before following this tutorial.
+I am going to use [rails-api](https://github.com/rails-api/rails-api) gem for API so make sure you have ruby and rails-api gem installed before following this tutorial.
 
-And for the client I'm going to use [node.js](http://nodejs.org/) and [express](http://expressjs.com/) to serve our files. So make sure you have those as well. Or you can just put useless to rails-api public folder. I just prefer if client and API are separate projects.
+And for the client I'm going to use [node.js](http://nodejs.org/) and [express.js](http://expressjs.com/) to serve our files. So make sure you have those as well. Or you can just put useless to rails-api public folder. I just prefer if client and API are separate projects.
 
 ## Creating an API for useless
 
 Firstly, because useless is completely dependent on API (if you need to create an offline web application, you are in the wrong place man), we need a backend.
 
-You can choose whichever technology or framework you prefer. PHP (Yii), Ruby (Rails), Java (Play), whatever. I'm gonna use [https://github.com/rails-api/rails-api](rails-api) gem because it's the simplest way to create an API. If you want to use something else, then scroll down to see how to actually use useless.
+You can choose whichever technology or framework you prefer. PHP (Yii), Ruby (Rails), Java (Play), whatever. I'm gonna use rails-api gem because it's the simplest way to create an API. If you want to use something else, then scroll down to see how to actually use useless.
 
 Open command line and navigate to directory where you want to create your API.
 
-We need to make an API for useless to use. Hopefully you have [rails-api](https://github.com/rails-api/rails-api) installed already.
+We need to make an API for useless to use. Hopefully you have rails-api gem installed already.
 
 `rails-api new server`
 
 For enabling crossdomain requests, we need to install another gem into the system.
 
-Into your newly created project's **Gemfile** add the following line:
+**Gemfile**
+
 `gem 'rack-cors', :require => 'rack/cors'`
 
-And in the project's directory, run `bundle` in your command line.
+On the command line, run `bundle` while being in project directory.
 
 Next .. some extra configuration has to be done to actually enable the gem.
-Open **config/application.rb** and add a few lines in between a specific block.
+We will add a few lines in between a specific block in application configuration.
+
+**config/application.rb**
 
 ```ruby
 ### other code ###
@@ -56,6 +58,7 @@ end
 
 So finally our groundwork with rails-api is done and we can add our Task model and controller actions.
 Run this in your project directory:
+
 `rails-api generate scaffold Task name:string completed:boolean --no-test-framework`
 
 `rake db:migrate`
@@ -66,7 +69,8 @@ Let's fire up our API on port 3001: `rails s -p 3001`
 
 At this point our basic API is completed and finally we can go to useless, which this tutorial is really about.
 
-## Creating useless
+## Creating useless client
+### Hello World!
 Because useless is only an alpha, it hasn't got any generators so everything must be done by hand.
 
 Open command line and navigate to directory where you want to create your useless app.
@@ -83,8 +87,8 @@ To do this, I wrote a small script wich you need to copy and paste to your comma
 
 `mkdir -p app/controllers app/views/tasks js/lib`
 
-We need to download five files. Jquery.js, mustache.js, useless.js, server.js and package.json.
-First two because useless has two hard dependencies. JQuery and Mustache.
+We need to download five files. jquery.js, mustache.js, useless.js, server.js and package.json.
+First two because useless has two hard dependencies. [JQuery](http://jquery.com/) and [https://github.com/janl/mustache.js](Mustache).
 
 TODO: Write here wget things
 
@@ -97,6 +101,8 @@ The main configuration file is called application.js and it resides typically in
 
 Let's create **application.js** into js directory.
 
+**/js/application.js**
+
 ```javascript
 Application = {
   apiUrl: 'http://localhost:3001'
@@ -105,10 +111,12 @@ Application = {
 ApplicationController.initialize();
 ```
 
-Pretty straightforward stuff. ApplicationController.initialize(); will kick off the application.
+Pretty straightforward stuff. `ApplicationController.initialize();` will kick off the application.
 
 Controllers are responsible for getting data from API and rendering it.
-Create **applicationController.js** into controllers directory. Just like Rails.
+Next we need application controller. Just like Rails.
+
+**/app/controllers/applicationController.js**
 
 ```javascript
 ApplicationController = new Controller({
@@ -120,9 +128,11 @@ ApplicationController = new Controller({
 
 Little more interesting, isn't it.
 
-Initialize is the entry point for the application. We can kick off the first request by calling Routes.initialize(); We will get into Routes in a moment, for now, let's keep to controllers
+Initialize is the entry point for the application. We can kick off the first request by calling `Routes.initialize();` We will get into Routes in a moment, for now, let's keep to controllers
 
-Next, tasksContoller.js into controllers directory. Just like Rails.
+Next, tasks contoller.
+
+**/app/controllers/tasksController.js**
 
 ```javascript
 TasksController = ApplicationController.extend({
@@ -134,16 +144,22 @@ TasksController = ApplicationController.extend({
 });
 ```
 
-ViewDir defines the path where views for this controller reside in.
+`viewDir` defines the path where views for this controller reside in.
 
-Index function is for listing all tasks. At the moment, we just render the index view.
+`index` function is for listing all tasks. At the moment, we just render the index view.
 
 Next, we need a view for the index function we just created. Again, pretty straightforward.
 Create a file **index.html** into /app/view/tasks directory.
 
-At the moment we just write "Hello World" there.
+**/app/view/tasks/index.html**
 
-And last, but not least, we need to define Routes object. I am going to place **routes.js** into the folder /js.
+```html
+Hello World!
+```
+
+And last, but not least, we need to define Routes object.
+
+**/js/routes.js**
 
 ```javascript
 Routes = new Routes({
@@ -151,9 +167,11 @@ Routes = new Routes({
 });
 ```
 
-So it catches get request on url http://localhost/#/tasks and calls TasksController.index();
+So it catches get request on url `http://localhost:3000/#/tasks` and calls `TasksController.index();`
 
-All this logic, we have written, must be called from a static file. Let's create our last file **/index.html**
+All this logic, we have written, must be called from a static file. Our last file for now will be index.html
+
+**/index.html**
 
 ```html
 <!doctype html>
@@ -177,15 +195,17 @@ All this logic, we have written, must be called from a static file. Let's create
 
 Actually there are some other options how to include all necessary files, but for this tutorial, I will stick to this simple html that everyone understands.
 
-At this point, we are ready to try out our application. Open browser and go to http://localhost:3000/#/tasks.
+At this point, we are ready to try out our application. Open browser and go to `http://localhost:3000/#/tasks`.
 
 If everything went right, you should see Hello World! displayed to you.
+
+### Link it to the API
 
 Next, we are going to tie the basic application to our API.
 
 To list some tasks, we need to have some data. So we will have to make a form to add some data.
 
-Add file /app/views/tasks/blank.html
+**/app/views/tasks/blank.html**
 
 ```html
 <form method="post" action="#/tasks">
@@ -194,9 +214,11 @@ Add file /app/views/tasks/blank.html
 </form>
 ```
 
-For this view, we have to add a function to TasksController which renders the form.
+For this view, we have to add a function to `TasksController` which renders the form.
 
-Insert the following method into **/app/controllers/tasksController.js**
+We need to create a new controller method.
+
+**/app/controllers/tasksController.js**
 
 ```javascript
 blank: function() {
@@ -209,10 +231,10 @@ And now we need to create a route for this view.
 **/js/routes.js**
 
 ```javascript
-  'get#/tasks/blank': function() { TasksController.blank(); }
+'get#/tasks/blank': function() { TasksController.blank(); }
 ```
 
-Navigate your browser to http://localhost:3000/#/tasks/blank
+Navigate your browser to `http://localhost:3000/#/tasks/blank`
 
 Success, now we have to create an action to really submit the form.
 
@@ -232,10 +254,11 @@ show: function(params) {
 }
 ```
 
-This gets interesting. We made two new actions. One for creating the task and other for showing it. Can you see draw the lines already with Rails?
+This gets interesting. We made two new actions. One for creating the task and other for showing it. Can you see how we draw the lines already with Rails?
 
-Model.post(...) posts form to API and then redirects application to http://localhost:3000/tasks/1.
-Model.get(...) gets data from API and then renders show.html
+`Model.post(...)` posts form to API and then redirects application to `http://localhost:3000/tasks/1`.
+
+`Model.get(...)` gets data from API and then renders show.html
 
 Remeber this line we added to blank.html? `<form method="post" action="#/tasks">`
 We will now fashion a new route out of this.
@@ -247,6 +270,7 @@ We will now fashion a new route out of this.
 'post#/tasks': function(params) { TasksController.create(params); }
 ```
 get#... executes TasksController.show(params); Notice the params we now pass into the method. In this case, params.id is equal to task id we need to show.
+
 post#... executes TasksController.create(params); Params in this holds the entire form and for the sake of simplicity, also the action where the form should post. You can try to console.log everything out to see it for yourself.
 
 Now, all we need is a show.html
@@ -263,8 +287,8 @@ Done:
 
 Useless uses Mustache templating language. That means, name and completed values come from API.
 
-Open browser again http://localhost:3000/#/tasks/blank, type in task name and hit Submit!
-Useless makes a request to API to save the task, then redirects you to http://localhost:3000/#/tasks/1, asks API for data and then displays it.
+Open browser again `http://localhost:3000/#/tasks/blank`, type in task name and hit Submit!
+Useless makes a request to API to save the task, then redirects you to `http://localhost:3000/#/tasks/1`, asks API for data and then displays it.
 
 To display all tasks, lets make some changes to index method and index.html view.
 
@@ -280,6 +304,7 @@ index: function() {
 
 **/app/views/tasks/index.html**
 
+```html
 {{#.}}
   Task name: {{name}}<br />
   Done:
@@ -288,6 +313,7 @@ index: function() {
   <a href="#/tasks/{{id}}">Edit</a>
   <br /><br />
 {{/.}}
+```
 
 Pretty intuitive. If you want to learn more about mustache.js, refer to their [github](https://github.com/janl/mustache.js).
 
@@ -316,7 +342,7 @@ update: function(params) {
   Model.put('/tasks/' + params.id, params.form.serialize(), function() {
     this.redirect('/tasks/' + params.id);
   }.bind(this));
-},
+}
 ```
 
 **/js/routes.js**
