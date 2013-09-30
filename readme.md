@@ -97,9 +97,7 @@ Note: You can choose witchever server you prefer to serve static files (Apache, 
 
 You can already start up server by typing `node server.js`
 
-The main configuration file is called application.js and it resides typically in js directory. Of course, useless does not set boundaries for file placement.
-
-Let's create **application.js** into js directory.
+The main configuration file is called **application.js** and it resides typically in **js** directory. Of course, useless does not set boundaries for file placement.
 
 **/js/application.js**
 
@@ -113,7 +111,7 @@ ApplicationController.initialize();
 
 Pretty straightforward stuff. `ApplicationController.initialize();` will kick off the application.
 
-Controllers are responsible for getting data from API and rendering it.
+Controllers are responsible for getting data from API and rendering it.  
 Next we need application controller. Just like Rails.
 
 **/app/controllers/applicationController.js**
@@ -148,8 +146,7 @@ TasksController = ApplicationController.extend({
 
 `index` function is for listing all tasks. At the moment, we just render the index view.
 
-Next, we need a view for the index function we just created. Again, pretty straightforward.
-Create a file **index.html** into /app/view/tasks directory.
+Next, we need a view for the index function we just created. Again, pretty straightforward.  
 
 **/app/view/tasks/index.html**
 
@@ -269,9 +266,10 @@ We will now fashion a new route out of this.
 'get#/tasks/:id': function(params) { TasksController.show(params); },
 'post#/tasks': function(params) { TasksController.create(params); }
 ```
-get#... executes TasksController.show(params); Notice the params we now pass into the method. In this case, params.id is equal to task id we need to show.
 
-post#... executes TasksController.create(params); Params in this holds the entire form and for the sake of simplicity, also the action where the form should post. You can try to console.log everything out to see it for yourself.
+`get#...` executes `TasksController.show(params);` Notice the `params` we now pass into the method. In this case, `params.id` is equal to task id we need to show.
+
+`post#...` executes `TasksController.create(params);` `params` in this holds the entire form and for the sake of simplicity, also the action where the form should post. You can try to console.log everything out to see it for yourself.
 
 Now, all we need is a show.html
 
@@ -287,7 +285,7 @@ Done:
 
 Useless uses Mustache templating language. That means, name and completed values come from API.
 
-Open browser again `http://localhost:3000/#/tasks/blank`, type in task name and hit Submit!
+Open browser again `http://localhost:3000/#/tasks/blank`, type in task name and hit Submit!  
 Useless makes a request to API to save the task, then redirects you to `http://localhost:3000/#/tasks/1`, asks API for data and then displays it.
 
 To display all tasks, lets make some changes to index method and index.html view.
