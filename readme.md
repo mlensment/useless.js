@@ -291,7 +291,7 @@ We will now fashion a new route out of this.
 
 Now, all we need is a show.html
 
-**/app/views/show.html**
+**/app/view/tasks/show.html**
 
 ```html
 Task name: {{name}}<br />
@@ -337,7 +337,7 @@ Lastly, we need a way to edit the task. I already created edit links to index, w
 
 Instead of setting up a new route to edit view, I'm just gonna improve show.html for now.
 
-**/app/views/show.html**
+**/app/view/tasks/show.html**
 
 ```html
 <form method="put" action="#/tasks/{{id}}">
