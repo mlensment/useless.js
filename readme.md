@@ -224,7 +224,7 @@ To list some tasks, we need to have some data. So we will have to make a form to
 
 ```html
 <form method="post" action="#/tasks">
-  Task name: <input type="text" name="post[name]" />
+  Task name: <input type="text" name="task[name]" />
   <button>Submit!</button>
 </form>
 ```
