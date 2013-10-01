@@ -91,7 +91,7 @@ We need to download four files. jquery.js, mustache.js, useless.js, and package.
 First two because useless has two hard dependencies. [JQuery](http://jquery.com/) and [Mustache](https://github.com/janl/mustache.js).
 
 ```
-wget -O js/lib/useless.js https://github.com/mlensment/useless.js/blob/master/useless.js js/useless.js
+wget -O js/lib/useless.js https://github.com/mlensment/useless.js/blob/master/useless.js
 wget -O js/lib/mustache.js https://github.com/mlensment/useless.js/blob/master/test-application/client/js/lib/mustache.js
 wget -O js/lib/jquery.js http://code.jquery.com/jquery-1.10.2.js
 wget -O package.json https://github.com/mlensment/useless.js/blob/master/test-application/client/package.json
